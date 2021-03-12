@@ -1,7 +1,7 @@
 import 'package:e_shop/TabScreens/catagory.dart';
 import 'package:e_shop/TabScreens/home.dart';
 import 'package:e_shop/TabScreens/profile.dart';
-import 'package:e_shop/TabScreens/search.dart';
+import 'package:e_shop/TabScreens/cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentindex = 0;
-  final List<Widget> tabs = [Home(), Catagory(), Search(), Profile()];
+  final List<Widget> tabs = [Home(), Catagory(), Cart(), Profile()];
 
   @override
   Widget build(BuildContext context) {

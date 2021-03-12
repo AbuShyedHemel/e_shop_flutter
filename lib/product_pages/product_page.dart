@@ -18,11 +18,13 @@ class Productpage extends StatefulWidget {
 }
 
 class _ProductpageState extends State<Productpage> {
+  var _color = ["Red", "Yellow", "Blue"];
+  var currentItem = "Red";
   @override
   Widget build(BuildContext context) {
     final screen_weight = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.orange[800],
+      backgroundColor: Colors.white,
       body: ListView(
         children: [
           Container(
@@ -138,75 +140,44 @@ class _ProductpageState extends State<Productpage> {
                     height: 10,
                   ),
 ///////////////////////////////////////////Color///////////////////////////
-                  SingleChildScrollView(
-                    child: Container(
-                      height: 80,
-                      width: screen_weight,
-                      color: Colors.white,
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 75,
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Color ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 14),
-                              )),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              color: Colors.black,
-                              height: 40,
-                              width: 100,
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Black",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              color: Colors.black,
-                              height: 40,
-                              width: 100,
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Blue",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              color: Colors.black,
-                              height: 40,
-                              width: 100,
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Red",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+
+                  Container(
+                    height: 80,
+                    width: screen_weight,
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Container(
+                            width: 75,
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Color ",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400, fontSize: 14),
+                            )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        DropdownButton<String>(
+                          items: _color.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                              value: dropDownStringItem,
+                              child: Text(dropDownStringItem),
+                            );
+                          }).toList(),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              this.currentItem = newValue;
+                            });
+                            
+                          },
+                          value: currentItem,
+
+                        )
+                      ],
                     ),
                   ),
+
                   SizedBox(
                     height: 10,
                   ),
@@ -263,12 +234,119 @@ class _ProductpageState extends State<Productpage> {
               ),
               Padding(
                 padding: EdgeInsets.all(5.0),
-                child: Text(widget.product_details_name),
+                child: Text("X"),
               )
             ],
+          ),
+          Divider(),
+          Padding(padding: EdgeInsets.all(8.0),
+          child: Text("Similar Product"),),
+          Container(
+            height: 360.0,
+            child: Similar_products(),
           )
         ],
       ),
     );
   }
 }
+class Similar_products extends StatefulWidget {
+  @override
+  _Similar_productsState createState() => _Similar_productsState();
+}
+
+class _Similar_productsState extends State<Similar_products> {
+    var product_list = [
+    {
+      "name": "Shirt",
+      "picture": "images/products/tshirt1.png",
+      "old_price": 500,
+      "price": 300,
+    },
+    {
+      "name": "Shirt",
+      "picture": "images/products/tshirt12.png",
+      "old_price": 800,
+      "price": 400,
+    },
+
+    {
+      "name": "Shirt",
+      "picture": "images/products/tshirt12.png",
+      "old_price": 800,
+      "price": 400,
+    },
+
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      itemCount: product_list.length,
+      gridDelegate:
+          new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemBuilder: (BuildContext contex, int index) {
+        return Similar_Single_prod(
+          product_name: product_list[index]["name"],
+          prod_pictures: product_list[index]['picture'],
+          prod_oldprice: product_list[index]["old_price"],
+          prod_price: product_list[index]["price"],
+        );
+      },
+    );
+  }
+}
+class Similar_Single_prod extends StatelessWidget {
+  final product_name;
+  final prod_pictures;
+  final prod_oldprice;
+  final prod_price;
+
+  const Similar_Single_prod(
+      {Key key,
+      this.product_name,
+      this.prod_pictures,
+      this.prod_oldprice,
+      this.prod_price});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Hero(
+        tag: Text("Hero 1"),
+        child: Material(
+          child: InkWell(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => new Productpage(
+                      product_details_name: product_name,
+                      product_details_price: prod_price,
+                      product_details_oldprice: prod_oldprice,
+                      product_details_picture: prod_pictures,
+                    ))),
+            child: GridTile(
+              footer: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        product_name,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                      Text(
+                        "\$${prod_price}",
+                        style: TextStyle(color: Colors.orange[800]),
+                      )
+                    ],
+                  )),
+              child: Image.asset(
+                prod_pictures,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+

@@ -11,7 +11,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Widget image_carousel = new Container(
+    Widget image_carousel = Container(
       height: 200,
       child: new Carousel(
         boxFit: BoxFit.cover,
@@ -25,6 +25,7 @@ class _HomeState extends State<Home> {
         animationDuration: Duration(milliseconds: 1000),
         dotSize: 4.0,
         indicatorBgPadding: 4.0,
+        dotBgColor: Colors.transparent,
       ),
     );
     final screen_height = MediaQuery.of(context).size.height;
@@ -32,12 +33,10 @@ class _HomeState extends State<Home> {
         body: ListView(
         children:
         [
-          Container(
-            height: screen_height*0.2,
-            child:image_carousel,
+         Container(
+            height: screen_height*0.2,child:image_carousel,
           ),
-          Container(height: screen_height*0.6,child: Products(),),
-          
+          Container(height: screen_height*0.61,child: Products(),), 
         ],
     ));
   }
