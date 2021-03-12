@@ -87,8 +87,8 @@ class Single_prod extends StatelessWidget {
       this.product_name,
       this.prod_pictures,
       this.prod_oldprice,
-      this.prod_price})
-      : super(key: key);
+      this.prod_price});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -96,22 +96,21 @@ class Single_prod extends StatelessWidget {
         tag: product_name,
         child: Material(
           child: InkWell(
-            onTap: () =>
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => Productpage(
-                    product_details_name: product_name,
-                    product_details_price: prod_price,
-                    product_details_oldprice: prod_oldprice,
-                    product_details_picture: prod_price,
-                  ))),
-          child: GridTile(
-            footer: Container(
-              color: Colors.white70,
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => new Productpage(
+                      product_details_name: product_name,
+                      product_details_price: prod_price,
+                      product_details_oldprice: prod_oldprice,
+                      product_details_picture: prod_pictures,
+                    ))),
+            child: GridTile(
+              footer: Container(
+                color: Colors.white70,
                 child: ListTile(
                   leading: Text(product_name,
                       style: TextStyle(
                         fontSize: 15,
-                          color: Colors.orange[800],
+                        color: Colors.orange[800],
                       )),
                   title: Text(
                     "\$$prod_price",
