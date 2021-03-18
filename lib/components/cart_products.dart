@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-
+// ignore: camel_case_types
 class Cart_products extends StatefulWidget {
   @override
   _Cart_productsState createState() => _Cart_productsState();
 }
 
+// ignore: camel_case_types
 class _Cart_productsState extends State<Cart_products> {
+  // ignore: non_constant_identifier_names
   var product_on_cart = [
     {
       "name": "Shirt",
@@ -45,19 +47,30 @@ class _Cart_productsState extends State<Cart_products> {
   }
 }
 
+// ignore: camel_case_types
 class Single_cart_products extends StatelessWidget {
+  // ignore: non_constant_identifier_names
   final cart_product_name;
+  // ignore: non_constant_identifier_names
   final cart_prod_pictures;
+  // ignore: non_constant_identifier_names
   final cart_prod_size;
+  // ignore: non_constant_identifier_names
   final cart_prod_price;
+  // ignore: non_constant_identifier_names
   final cart_prod_color;
 
   const Single_cart_products(
       {Key key,
+      // ignore: non_constant_identifier_names
       this.cart_product_name,
+      // ignore: non_constant_identifier_names
       this.cart_prod_pictures,
+      // ignore: non_constant_identifier_names
       this.cart_prod_size,
+      // ignore: non_constant_identifier_names
       this.cart_prod_price,
+      // ignore: non_constant_identifier_names
       this.cart_prod_color})
       : super(key: key);
   @override
@@ -97,6 +110,7 @@ class Single_cart_products extends StatelessWidget {
             // ===========Price===========//
             Container(
                   alignment: Alignment.topLeft,
+                  // ignore: unnecessary_brace_in_string_interps
                   child: Text("\$${cart_prod_price}",style: TextStyle(color: Colors.orange[900],fontWeight: FontWeight.bold),)
                 )
           ],
@@ -105,8 +119,6 @@ class Single_cart_products extends StatelessWidget {
           child:
             IconButton(icon: Icon(Icons.arrow_drop_down,size: 15,), onPressed: (){},),
             //IconButton(icon: Icon(Icons.arrow_drop_down,size: 15,), onPressed: (){},)
-            
-          
         ),
       ),
     );

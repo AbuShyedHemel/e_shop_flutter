@@ -1,7 +1,8 @@
 import 'package:e_shop/screens/SignInPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../components/users.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -10,8 +11,10 @@ class Signup extends StatefulWidget {
 
 class _FirstPageState extends State<Signup> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  // ignore: unused_field
   String _email, _password, _name, _phone, _confirmpassword;
+  UserServices userServices = UserServices();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  SharedPreferences preferences;
 
   @override
   Widget build(BuildContext context) {
@@ -174,10 +177,8 @@ class _FirstPageState extends State<Signup> {
                 width: 340,
                 // ignore: deprecated_member_use
                 child: RaisedButton(
-                  onPressed: () {
-                    
+                  onPressed: () async {
                     _signup();
-                    
                   },
                   child: const Text('Signup'),
                   textColor: Colors.white,
@@ -192,15 +193,32 @@ class _FirstPageState extends State<Signup> {
     );
   }
 
-  void _signup() async {
+  Future _signup() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      User user = await auth.currentUser;
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _email,
-          password: _password,
-        );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: _email,
+              password: _password,
+            )
+            .then((user) => {
+                  userServices.creatUser({
+                    "username": _name.toString(),
+                    "email": _email.toString(),
+                    "userId": user.user.uid,
+                    "phonenumber": _phone,
+                    "password": _password
+                  })
+                })
+            .then((value) async {
+          preferences = await SharedPreferences.getInstance();
+          preferences.setString("email", _email.toString());
+        }).catchError((e) => print(e.toString()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignIn(print(_email))));
       } catch (e) {
         print(e.message);
       }

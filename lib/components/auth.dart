@@ -1,7 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 abstract class BaseAuth {
   //final GoogleSignIn googleSignIn = new GoogleSignIn();
@@ -20,7 +19,7 @@ class Auth implements BaseAuth {
     final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
     try {
-      User user = (await _auth.signInWithCredential(credential)) as User;
+      User user = (await _auth.signInWithCredential(credential)).user;
       return user;
     } catch (e) {
       print(e.toString());

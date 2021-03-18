@@ -1,10 +1,15 @@
+import 'package:e_shop/components/auth.dart';
+import 'package:e_shop/components/users.dart';
 import 'package:e_shop/screens/HomePage.dart';
 import 'package:e_shop/screens/SignUpPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
+  SignIn(void print);
+
   @override
   _FirstPageState createState() => _FirstPageState();
 }
@@ -12,7 +17,24 @@ class SignIn extends StatefulWidget {
 class _FirstPageState extends State<SignIn> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey();
+  SharedPreferences preferences;
   String _email, _password;
+  String finalEmail;
+  Auth _auth = Auth();
+  UserServices userServices = UserServices();
+
+  Future getValidation() async {
+    preferences = await SharedPreferences.getInstance();
+    await preferences.getString("email");
+    await preferences.getString("password");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getValidation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,10 +139,15 @@ class _FirstPageState extends State<SignIn> {
                 width: 340,
                 // ignore: deprecated_member_use
                 child: RaisedButton(
-                  onPressed: () {
-                    // _signin();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
+                  onPressed: () async {
+                    preferences = await SharedPreferences.getInstance();
+                    await preferences.setString("email", _email.toString());
+                    await preferences.setString(
+                        "password", _password.toString());
+                    _signin();
+
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(builder: (context) => HomePage()));
                   },
                   child: const Text('Login'),
                   textColor: Colors.white,
@@ -139,7 +166,28 @@ class _FirstPageState extends State<SignIn> {
                   );
                 },
                 child: Text("Don't have an Account? Signup"),
-              ))
+              )),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                child: MaterialButton(
+                  color: Colors.orange[800],
+                  onPressed: () async {
+                    User user = await _auth.googleSignIn();
+                    if (user != null) {
+                      userServices.creatUser({
+                        'name': user.displayName,
+                        'photo': user.photoURL,
+                        'email':user.email,
+                        'number':user.phoneNumber
+                      });
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                    }
+                  },
+                  child: Text("SignIn WithGoogle"),
+                ),
+              )
             ],
           ),
         ),
@@ -147,21 +195,22 @@ class _FirstPageState extends State<SignIn> {
     );
   }
 
-  // Future<void> _signin() async {
-
-  //   if (_formKey.currentState.validate()) {
-  //     _formKey.currentState.save();
-  //     try {
-  //       await auth.signInWithEmailAndPassword(email: _email, password: _password);
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-  //     } on FirebaseAuthException catch (e) {
-  //       Fluttertoast.showToast(
-  //         msg: e.message,
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.CENTER,
-  //         timeInSecForIosWeb: 1,
-  //       );
-  //     }
-  //   }
-  // }
+  Future<void> _signin() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      try {
+        await auth.signInWithEmailAndPassword(
+            email: _email, password: _password);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      } on FirebaseAuthException catch (e) {
+        Fluttertoast.showToast(
+          msg: e.message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+        );
+      }
+    }
+  }
 }

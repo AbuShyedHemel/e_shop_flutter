@@ -11,6 +11,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: non_constant_identifier_names
     Widget image_carousel = Container(
       height: 200,
       child: new Carousel(
@@ -28,15 +29,17 @@ class _HomeState extends State<Home> {
         dotBgColor: Colors.transparent,
       ),
     );
+    // ignore: non_constant_identifier_names
     final screen_height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: ListView(
+        body: Column(
         children:
         [
          Container(
-            height: screen_height*0.2,child:image_carousel,
+           height: screen_height*0.25,
+            child:image_carousel,
           ),
-          Container(height: screen_height*0.61,child: Products(),), 
+          Flexible(child: Products(),), 
         ],
     ));
   }
